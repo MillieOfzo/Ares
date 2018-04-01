@@ -207,7 +207,7 @@ namespace passwordManager
                 string text_name = readdata["list_name"].ToString();
                 byte[] text_password = (byte[])readdata["list_password"];
                 byte[] text_nonce = (byte[])readdata["list_nonce"];
-                byte[] text_ke = (byte[])readdata["list_key"];
+                byte[] text_key = (byte[])readdata["list_key"];
                 byte[] message2 = SecretBox.Open(text_password, text_nonce, text_key);
 
                 string msg = Encoding.UTF8.GetString(message2);
