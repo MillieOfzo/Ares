@@ -148,7 +148,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Image = global::passwordManager.Properties.Resources.sot_logo_100_gray;
             this.pictureBox1.Location = new System.Drawing.Point(156, 13);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(150, 150);

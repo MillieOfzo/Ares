@@ -69,5 +69,15 @@ namespace passwordManager.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap sot_logo_100_gray {
+            get {
+                object obj = ResourceManager.GetObject("sot_logo_100_gray", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }
