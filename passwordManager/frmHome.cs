@@ -169,8 +169,8 @@ namespace passwordManager
 
                             metroListView1.View = View.Details;
 
-                            metroListView1.Columns.Add("People");
-                            metroListView1.Columns.Add("Occur");
+                            metroListView1.Columns.Add("ID");
+                            metroListView1.Columns.Add("Name");
 
                             while (reader.Read())
                             {
@@ -243,7 +243,7 @@ namespace passwordManager
 
                 string msg = Encoding.UTF8.GetString(message2);
 
-                if (MetroMessageBox.Show(this, "Password: " + msg+ "\r\n (Click Yes to copy)", text_name, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                if (MetroMessageBox.Show(this, "Password: \n" + msg+ "\n\n (Click Yes to copy)", text_name, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
                 {
                     Clipboard.SetText(msg);
                 }
