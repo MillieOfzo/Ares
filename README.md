@@ -1,6 +1,4 @@
-# ARES (PasswordVault)
+# SOTERIA'S VAULT (PasswordVault)
 <p align="center">
-<img src="img/app_logo_dark.png"  width="20%" align="center" /></p>
-
-- Body class **dark-bg**
+<img src="sot_logo_100_gray.png"  width="20%" align="center" /></p>
 
