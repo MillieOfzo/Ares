@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using Sodium;
+using MetroFramework;
 
 namespace passwordManager
 {
@@ -22,11 +23,13 @@ namespace passwordManager
 
         public string currentUser = frmMain.UserInformation.CurrentLoggedInUser;
         public string currentUserRole = frmMain.UserInformation.CurrentLoggedInUserRole;
+        public string AppVersion = frmMain.UserInformation.AppVersion;
 
         public frmHome()
         {
             InitializeComponent();
             metroLabel3.Text += currentUser;
+            metroLabel6.Text += AppVersion;
             if (currentUserRole != "1")
             {
                 metroTabControl1.TabPages.Remove(metroTabPage1);
@@ -41,16 +44,12 @@ namespace passwordManager
             frmMain fl = new frmMain();
             fl.Show();
         }
-        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Application.Exit();
-        }
 
         private void metroButton1_Click(object sender, EventArgs e)
         {
             if (txt_add_username.Text == "" || txt_add_password.Text == "")
             {
-                MessageBox.Show("Please provide UserName and Password");
+                MetroMessageBox.Show(this, "Please provide UserName and Password", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             try
@@ -82,7 +81,7 @@ namespace passwordManager
 
                 if (i != 0)
                 {
-                    MessageBox.Show("Data Saved");
+                    MetroMessageBox.Show(this, "User Saved", "Success", MessageBoxButtons.OK, MessageBoxIcon.Question);
                     BindGridUsers();
                 }
             }
@@ -115,7 +114,7 @@ namespace passwordManager
         {
             if (txt_name.Text == "" || txt_password.Text == "")
             {
-                MessageBox.Show("Please provide Name and a password");
+                MetroMessageBox.Show(this, "Please provide a name and Password", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             try
@@ -136,10 +135,6 @@ namespace passwordManager
                 cmd.Parameters.AddWithValue("@list_key", list_key);
                 cmd.Parameters.AddWithValue("@list_nonce", list_nonce);
 
-                Console.WriteLine();
-                Console.WriteLine("Original data: " + message);
-                Console.WriteLine("Encrypting and writing to disk...");
-
                 con.Open();
                 int i = cmd.ExecuteNonQuery();
 
@@ -147,8 +142,8 @@ namespace passwordManager
 
                 if (i != 0)
                 {
-                    MessageBox.Show("Password Saved");
-                    BindGridPasswords();
+                    MetroMessageBox.Show(this, "Password Saved", "Success", MessageBoxButtons.OK, MessageBoxIcon.Question);
+                    RefreshGridPasswords();
                 }
             }
             catch (Exception ex)
@@ -162,42 +157,78 @@ namespace passwordManager
             {
                 using (SqlCommand cmd = new SqlCommand("SELECT * FROM tbl_list", con))
                 {
+                    con.Open();
                     cmd.CommandType = CommandType.Text;
-                    using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        using (DataTable dt = new DataTable())
-                        {
-                            sda.Fill(dt);
 
-                            //Set AutoGenerateColumns False
-                            metroGrid2.AutoGenerateColumns = false;
+                            // Clear the ListView control
+                            metroListView1.Items.Clear();
 
-                            //Set Columns Count
-                            metroGrid2.ColumnCount = 2;
+                            metroListView1.Scrollable = true;
 
-                            //Add Columns
-                            metroGrid2.Columns[0].Name = "Id";
-                            metroGrid2.Columns[0].HeaderText = "Row ID";
-                            metroGrid2.Columns[0].DataPropertyName = "Id";
+                            metroListView1.View = View.Details;
 
-                            metroGrid2.Columns[1].Name = "CustomerId";
-                            metroGrid2.Columns[1].HeaderText = "Name";
-                            metroGrid2.Columns[1].DataPropertyName = "list_name";
+                            metroListView1.Columns.Add("People");
+                            metroListView1.Columns.Add("Occur");
 
-                            metroGrid2.DataSource = dt;
-                        }
+                            while (reader.Read())
+                            {
+                                var item = new ListViewItem();
+                                item.Text = reader["Id"].ToString();        // 1st column text
+                                item.SubItems.Add(reader["list_name"].ToString());  // 2nd column text
+                                metroListView1.Items.Add(item);
+                            }
+                        metroListView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                        metroListView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+
                     }
+                    con.Close();
                 }
             }
         }
 
-        private void metroGrid2_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void RefreshGridPasswords()
         {
-            string id_text = metroGrid2.Rows[e.RowIndex].Cells["Id"].Value.ToString();
+            using (SqlConnection con = new SqlConnection(cs))
+            {
+                using (SqlCommand cmd = new SqlCommand("SELECT * FROM tbl_list", con))
+                {
+                    con.Open();
+                    cmd.CommandType = CommandType.Text;
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+
+                        // Clear the ListView control
+                        metroListView1.Items.Clear();
+
+                        // Display items in the ListView control
+                        metroListView1.View = View.Details;
+
+                        while (reader.Read())
+                        {
+                            var item = new ListViewItem();
+                            item.Text = reader["Id"].ToString();        // 1st column text
+                            item.SubItems.Add(reader["list_name"].ToString());  // 2nd column text
+                            metroListView1.Items.Add(item);
+                        }
+                        metroListView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                        metroListView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+
+                    }
+                    con.Close();
+                }
+            }
+        }
+
+        private void metroListView1_DoubleClick(object sender, EventArgs e)
+        {
+            //string show = metroListView1.Items[0].SubItems[0].Text;
+            string row_id = metroListView1.SelectedItems[0].SubItems[0].Text;
 
             SqlConnection con = new SqlConnection(cs);
             SqlCommand cmd = new SqlCommand("SELECT * FROM tbl_list WHERE Id = @row_id", con);
-            cmd.Parameters.AddWithValue("@row_id", id_text);
+            cmd.Parameters.AddWithValue("@row_id", row_id);
 
             con.Open();
             SqlDataReader readdata = cmd.ExecuteReader();
@@ -211,11 +242,36 @@ namespace passwordManager
                 byte[] message2 = SecretBox.Open(text_password, text_nonce, text_key);
 
                 string msg = Encoding.UTF8.GetString(message2);
-                MessageBox.Show("Password for: "+ text_name + " is: "+ msg);
+
+                if (MetroMessageBox.Show(this, "Password: " + msg+ "\r\n (Click Yes to copy)", text_name, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    Clipboard.SetText(msg);
+                }
             }
-            
-            
-            
+
+        }
+
+        private void metroButton3_Click(object sender, EventArgs e)
+        {
+            RefreshGridPasswords();
+        }
+
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            Show();
+            this.WindowState = FormWindowState.Normal;
+            notifyIcon1.Visible = false;
+        }
+
+        private void frmHome_Resize(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                Hide();
+                notifyIcon1.Visible = true;
+                notifyIcon1.ShowBalloonTip(1000);
+            }
         }
     }
 }
+ 

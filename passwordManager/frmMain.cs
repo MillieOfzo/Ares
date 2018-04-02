@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using Sodium;
+using MetroFramework;
+using System.Diagnostics;
 
 namespace passwordManager
 {
@@ -21,6 +23,14 @@ namespace passwordManager
         public frmMain()
         {
             InitializeComponent();
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+            string version = fvi.FileVersion;
+  
+            UserInformation.AppVersion = version;
+
+            metroLabel3.Text += version;
+
         }
 
         internal class UserInformation
@@ -35,18 +45,24 @@ namespace passwordManager
                 get;
                 set;
             }
+            public static string AppVersion
+            {
+                get;
+                set;
+            }
         }
 
         private void btn_Submit_Click(object sender, EventArgs e)
         {
             if (txt_UserName.Text == "" || txt_Password.Text == "")
             {
-                MessageBox.Show("Please provide UserName and Password");
+                MetroMessageBox.Show(this, "Please provide UserName and Password", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             try
             {
+                
                 //Create SqlConnection
                 SqlConnection con = new SqlConnection(cs);
                 SqlCommand cmd = new SqlCommand("Select * from tbl_Login where UserName=@username", con);
@@ -84,12 +100,29 @@ namespace passwordManager
                 }
                 else
                 {
-                    MessageBox.Show("Login Failed!");
+                    MetroMessageBox.Show(this, "Please check your username and password", "Login Failed!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            Show();
+            this.WindowState = FormWindowState.Normal;
+            notifyIcon1.Visible = false;
+        }
+
+        private void frmMain_Resize(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                Hide();
+                notifyIcon1.Visible = true;
+                notifyIcon1.ShowBalloonTip(1000);
             }
         }
     }
