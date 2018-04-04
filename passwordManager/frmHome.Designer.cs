@@ -401,11 +401,13 @@
             // metroLabel6
             // 
             this.metroLabel6.AutoSize = true;
+            this.metroLabel6.FontSize = MetroFramework.MetroLabelSize.Small;
             this.metroLabel6.Location = new System.Drawing.Point(8, 377);
             this.metroLabel6.Name = "metroLabel6";
             this.metroLabel6.Size = new System.Drawing.Size(36, 19);
             this.metroLabel6.TabIndex = 9;
             this.metroLabel6.Text = "Ver: ";
+            this.metroLabel6.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.metroLabel6.Theme = MetroFramework.MetroThemeStyle.Dark;
             // 
             // metroButton6
@@ -460,6 +462,7 @@
             this.Name = "frmHome";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Theme = MetroFramework.MetroThemeStyle.Dark;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmHome_FormClosing);
             this.Resize += new System.EventHandler(this.frmHome_Resize);
             this.metroTabControl1.ResumeLayout(false);
             this.metroTabPage1.ResumeLayout(false);

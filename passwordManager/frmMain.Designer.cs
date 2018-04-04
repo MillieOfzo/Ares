@@ -44,18 +44,19 @@
             // 
             // 
             // 
-            this.txt_Password.CustomButton.Image = null;
-            this.txt_Password.CustomButton.Location = new System.Drawing.Point(201, 1);
+            this.txt_Password.CustomButton.Image = ((System.Drawing.Image)(resources.GetObject("resource.Image")));
+            this.txt_Password.CustomButton.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("resource.ImeMode")));
+            this.txt_Password.CustomButton.Location = ((System.Drawing.Point)(resources.GetObject("resource.Location")));
             this.txt_Password.CustomButton.Name = "";
-            this.txt_Password.CustomButton.Size = new System.Drawing.Size(21, 21);
+            this.txt_Password.CustomButton.Size = ((System.Drawing.Size)(resources.GetObject("resource.Size")));
             this.txt_Password.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
-            this.txt_Password.CustomButton.TabIndex = 1;
+            this.txt_Password.CustomButton.TabIndex = ((int)(resources.GetObject("resource.TabIndex")));
             this.txt_Password.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
             this.txt_Password.CustomButton.UseSelectable = true;
-            this.txt_Password.CustomButton.Visible = false;
+            this.txt_Password.CustomButton.Visible = ((bool)(resources.GetObject("resource.Visible")));
             this.txt_Password.Lines = new string[0];
-            this.txt_Password.Location = new System.Drawing.Point(23, 208);
-            this.txt_Password.MaxLength = 32767;
+            resources.ApplyResources(this.txt_Password, "txt_Password");
+            this.txt_Password.MaxLength = 50;
             this.txt_Password.Name = "txt_Password";
             this.txt_Password.PasswordChar = '*';
             this.txt_Password.PromptText = "Password";
@@ -64,23 +65,17 @@
             this.txt_Password.SelectionLength = 0;
             this.txt_Password.SelectionStart = 0;
             this.txt_Password.ShortcutsEnabled = true;
-            this.txt_Password.Size = new System.Drawing.Size(223, 23);
-            this.txt_Password.TabIndex = 3;
             this.txt_Password.Theme = MetroFramework.MetroThemeStyle.Dark;
             this.txt_Password.UseSelectable = true;
             this.txt_Password.WaterMark = "Password";
             this.txt_Password.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.txt_Password.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
-            this.txt_Password.Click += new System.EventHandler(this.txt_Password_Click);
             // 
             // btn_Submit
             // 
             this.btn_Submit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btn_Submit.Location = new System.Drawing.Point(23, 237);
+            resources.ApplyResources(this.btn_Submit, "btn_Submit");
             this.btn_Submit.Name = "btn_Submit";
-            this.btn_Submit.Size = new System.Drawing.Size(223, 31);
-            this.btn_Submit.TabIndex = 4;
-            this.btn_Submit.Text = "Login";
             this.btn_Submit.Theme = MetroFramework.MetroThemeStyle.Dark;
             this.btn_Submit.UseSelectable = true;
             this.btn_Submit.Click += new System.EventHandler(this.btn_Submit_Click);
@@ -91,18 +86,19 @@
             // 
             // 
             // 
-            this.txt_UserName.CustomButton.Image = null;
-            this.txt_UserName.CustomButton.Location = new System.Drawing.Point(201, 1);
+            this.txt_UserName.CustomButton.Image = ((System.Drawing.Image)(resources.GetObject("resource.Image1")));
+            this.txt_UserName.CustomButton.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("resource.ImeMode1")));
+            this.txt_UserName.CustomButton.Location = ((System.Drawing.Point)(resources.GetObject("resource.Location1")));
             this.txt_UserName.CustomButton.Name = "";
-            this.txt_UserName.CustomButton.Size = new System.Drawing.Size(21, 21);
+            this.txt_UserName.CustomButton.Size = ((System.Drawing.Size)(resources.GetObject("resource.Size1")));
             this.txt_UserName.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
-            this.txt_UserName.CustomButton.TabIndex = 1;
+            this.txt_UserName.CustomButton.TabIndex = ((int)(resources.GetObject("resource.TabIndex1")));
             this.txt_UserName.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
             this.txt_UserName.CustomButton.UseSelectable = true;
-            this.txt_UserName.CustomButton.Visible = false;
+            this.txt_UserName.CustomButton.Visible = ((bool)(resources.GetObject("resource.Visible1")));
             this.txt_UserName.Lines = new string[0];
-            this.txt_UserName.Location = new System.Drawing.Point(23, 179);
-            this.txt_UserName.MaxLength = 32767;
+            resources.ApplyResources(this.txt_UserName, "txt_UserName");
+            this.txt_UserName.MaxLength = 50;
             this.txt_UserName.Name = "txt_UserName";
             this.txt_UserName.PasswordChar = '\0';
             this.txt_UserName.PromptText = "Username";
@@ -111,63 +107,48 @@
             this.txt_UserName.SelectionLength = 0;
             this.txt_UserName.SelectionStart = 0;
             this.txt_UserName.ShortcutsEnabled = true;
-            this.txt_UserName.Size = new System.Drawing.Size(223, 23);
-            this.txt_UserName.TabIndex = 0;
             this.txt_UserName.Theme = MetroFramework.MetroThemeStyle.Dark;
             this.txt_UserName.UseSelectable = true;
             this.txt_UserName.WaterMark = "Username";
             this.txt_UserName.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.txt_UserName.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
-            this.txt_UserName.Click += new System.EventHandler(this.txt_UserName_Click);
             // 
             // metroLabel3
             // 
-            this.metroLabel3.AutoSize = true;
-            this.metroLabel3.Location = new System.Drawing.Point(7, 280);
+            this.metroLabel3.FontSize = MetroFramework.MetroLabelSize.Small;
+            resources.ApplyResources(this.metroLabel3, "metroLabel3");
             this.metroLabel3.Name = "metroLabel3";
-            this.metroLabel3.Size = new System.Drawing.Size(36, 19);
-            this.metroLabel3.TabIndex = 5;
-            this.metroLabel3.Text = "Ver: ";
             this.metroLabel3.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroLabel3.Click += new System.EventHandler(this.metroLabel3_Click);
             // 
             // notifyIcon1
             // 
             this.notifyIcon1.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.notifyIcon1.BalloonTipText = "Your vault is hidden here";
-            this.notifyIcon1.BalloonTipTitle = "Soteria\'s Vault";
-            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
-            this.notifyIcon1.Text = " ";
+            resources.ApplyResources(this.notifyIcon1, "notifyIcon1");
             this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(59, 15);
+            resources.ApplyResources(this.pictureBox1, "pictureBox1");
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(150, 150);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox1.TabIndex = 6;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // frmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AcceptButton = this.btn_Submit;
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.CancelButton = this.btn_Submit;
-            this.ClientSize = new System.Drawing.Size(269, 306);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.metroLabel3);
             this.Controls.Add(this.btn_Submit);
             this.Controls.Add(this.txt_Password);
             this.Controls.Add(this.txt_UserName);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.DisplayHeader = false;
             this.MaximizeBox = false;
             this.Name = "frmMain";
+            this.Resizable = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Theme = MetroFramework.MetroThemeStyle.Dark;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
             this.Resize += new System.EventHandler(this.frmMain_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);

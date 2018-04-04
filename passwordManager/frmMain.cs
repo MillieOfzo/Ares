@@ -71,7 +71,7 @@ namespace soteriasVault
                 using (SqlConnection con = new SqlConnection(cs))
                 {
                     con.Open();
-                    using (SqlCommand cmd = new SqlCommand("Select * from tbl_login where UserName=@username", con))
+                    using (SqlCommand cmd = new SqlCommand("SELECT * FROM tbl_login WHERE UserName=@username", con))
                     {
                         //int rowCount = (int)cmd.ExecuteScalar();
                         //if (rowCount == 0)
@@ -80,7 +80,7 @@ namespace soteriasVault
                         //    return;
                         //}
 
-                        cmd.Parameters.AddWithValue("@username", txt_UserName.Text);
+                        cmd.Parameters.AddWithValue("@username", txt_UserName.Text.ToLower());
                         int is_admin = 0;
                         string username = null;
                         int username_id = 0;
@@ -161,24 +161,9 @@ namespace soteriasVault
             }
         }
 
-        private void txt_Password_Click(object sender, EventArgs e)
+        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-
-        }
-
-        private void txt_UserName_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void metroLabel3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
+            Application.Exit();
         }
     }
 }

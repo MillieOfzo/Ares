@@ -49,7 +49,7 @@ namespace soteriasVault
                         //this will produce a 512 byte hash
                         var hash = PasswordHash.ScryptHashString(txt_new_Password.Text, PasswordHash.Strength.Medium);
 
-                        cmd.Parameters.AddWithValue("@username", txt_new_UserName.Text);
+                        cmd.Parameters.AddWithValue("@username", txt_new_UserName.Text.ToLower());
                         cmd.Parameters.AddWithValue("@password", hash);
                         cmd.Parameters.AddWithValue("@is_admin", 1);
             
@@ -59,6 +59,7 @@ namespace soteriasVault
                         {
                             MetroMessageBox.Show(this, "User created", "Success", MessageBoxButtons.OK, MessageBoxIcon.Question);
                             this.DialogResult = DialogResult.OK;
+                            //Application.Restart();
                         }
                     }
                 }
@@ -67,6 +68,11 @@ namespace soteriasVault
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void frmCreate_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

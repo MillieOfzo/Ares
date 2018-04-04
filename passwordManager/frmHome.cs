@@ -80,7 +80,7 @@ namespace soteriasVault
                             is_admin = 0;
                         }
 
-                        cmd.Parameters.AddWithValue("@username", txt_add_username.Text);
+                        cmd.Parameters.AddWithValue("@username", txt_add_username.Text.ToLower());
                         cmd.Parameters.AddWithValue("@password", hash);
                         cmd.Parameters.AddWithValue("@is_admin", is_admin);
                         con.Open();
@@ -654,6 +654,11 @@ namespace soteriasVault
                     }
                 }
             }
+        }
+
+        private void frmHome_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Application.Exit();
         }
     }
 }
