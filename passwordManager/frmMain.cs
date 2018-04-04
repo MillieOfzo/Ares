@@ -13,7 +13,7 @@ using Sodium;
 using MetroFramework;
 using System.Diagnostics;
 
-namespace passwordManager
+namespace soteriasVault
 {
     public partial class frmMain : MetroFramework.Forms.MetroForm   
     {
@@ -22,6 +22,7 @@ namespace passwordManager
 
         public frmMain()
         {
+
             InitializeComponent();
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
             FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
@@ -30,17 +31,22 @@ namespace passwordManager
             UserInformation.AppVersion = version;
 
             metroLabel3.Text += version;
-
+            checkUsers();
         }
 
         internal class UserInformation
         {
+            public static int CurrentLoggedInUserID
+            {
+                get;
+                set;
+            }
             public static string CurrentLoggedInUser
             {
                 get;
                 set;
             }
-            public static string CurrentLoggedInUserRole
+            public static int CurrentLoggedInUserRole
             {
                 get;
                 set;
@@ -62,50 +68,56 @@ namespace passwordManager
 
             try
             {
-                
-                //Create SqlConnection
-                SqlConnection con = new SqlConnection(cs);
-                SqlCommand cmd = new SqlCommand("Select * from tbl_Login where UserName=@username", con);
-                cmd.Parameters.AddWithValue("@username", txt_UserName.Text);
-                //cmd.Parameters.AddWithValue("@password", txt_Password.Text);
-                con.Open();
-                //SqlDataAdapter adapt = new SqlDataAdapter(cmd);
-
-                SqlDataReader readdata = cmd.ExecuteReader();
-                string is_admin = null;
-                string username = null;
-                string hash = null;
-
-                while (readdata.Read())
+                using (SqlConnection con = new SqlConnection(cs))
                 {
-                    is_admin = readdata["is_admin"].ToString();
-                    username = readdata["UserName"].ToString();
-                    hash = readdata["Password"].ToString();
-                }
+                    con.Open();
+                    using (SqlCommand cmd = new SqlCommand("Select * from tbl_login where UserName=@username", con))
+                    {
+                        //int rowCount = (int)cmd.ExecuteScalar();
+                        //if (rowCount == 0)
+                        //{
+                        //    MetroMessageBox.Show(this, "No user found", "Login Failed!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        //    return;
+                        //}
 
+                        cmd.Parameters.AddWithValue("@username", txt_UserName.Text);
+                        int is_admin = 0;
+                        string username = null;
+                        int username_id = 0;
+                        string hash = null;
 
-                //DataSet ds = new DataSet();
-                //adapt.Fill(ds);
-                //int count = ds.Tables[0].Rows.Count;
-                //If count is equal to 1, than show frmMain form
-                con.Close();
-                if (PasswordHash.ScryptHashStringVerify(hash, txt_Password.Text))
-                {
-                    UserInformation.CurrentLoggedInUser = username;
-                    UserInformation.CurrentLoggedInUserRole = is_admin;
-                    //MessageBox.Show("Login Successful!");
-                    this.Hide();
-                    frmHome fm = new frmHome();
-                    fm.Show();
-                }
-                else
-                {
-                    MetroMessageBox.Show(this, "Please check your username and password", "Login Failed!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                        using (SqlDataReader readdata = cmd.ExecuteReader())
+                        {
+                            while (readdata.Read())
+                            {
+                                is_admin = (int)readdata["is_admin"];
+                                username = readdata["UserName"].ToString();
+                                username_id = (int)readdata["Id"];
+                                hash = readdata["Password"].ToString();
+                            }
+                        }
+
+                        if (PasswordHash.ScryptHashStringVerify(hash, txt_Password.Text))
+                        {
+                            UserInformation.CurrentLoggedInUserID = username_id;
+                            UserInformation.CurrentLoggedInUser = username;
+                            UserInformation.CurrentLoggedInUserRole = is_admin;
+                            //MessageBox.Show("Login Successful!");
+                            this.Hide();
+                            frmHome fm = new frmHome();
+                            fm.Show();
+                        }
+                        else
+                        {
+                            MetroMessageBox.Show(this, "Please check your username and password", "Login Failed!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                        }
+                    }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show(ex.Message);
+                //MessageBox.Show(ex.Message);
+                Console.WriteLine("Something went wrong!");
             }
         }
 
@@ -124,6 +136,49 @@ namespace passwordManager
                 notifyIcon1.Visible = true;
                 notifyIcon1.ShowBalloonTip(1000);
             }
+        }
+
+        private void checkUsers()
+        {
+            using (SqlConnection con = new SqlConnection(cs))
+            {
+                con.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM tbl_login", con))
+                {
+                    // Check if there are users in database
+                    int rowCount = (int)cmd.ExecuteScalar();
+                    // If there are no users show create user form
+                    if (rowCount == 0)
+                    {
+                        frmCreate createAdmin = new frmCreate();
+                        createAdmin.ShowDialog();
+                        if (createAdmin.DialogResult == DialogResult.OK)
+                        {
+                            // i dunno
+                        }
+                    }
+                }
+            }
+        }
+
+        private void txt_Password_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txt_UserName_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void metroLabel3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

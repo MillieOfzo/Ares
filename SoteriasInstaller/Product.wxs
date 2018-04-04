@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" Name="SoteriasInstaller" Language="1033" Version="1.0.0.0" Manufacturer="Roelof van Golen" UpgradeCode="abcd138d-bc72-4779-8124-6b38e9428722">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate />
+
+    <Feature Id="ProductFeature" Title="SoteriasInstaller" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+    </Feature>
+  </Product>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="Soteria" />
+      </Directory>
+    </Directory>
+  </Fragment>
+
+  <Fragment>
+    <Property Id="SOURCEDIRECTORY" Value="c:\doc\bin\path" />
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
+      <Component Id="soteriasVault.exe">
+        <File Source="$(var.soteriasvault.TargetPath)" />
+      </Component>
+      <Component Id="Database1.mdf">
+        <File Id="Database1.mdf" Source="C:\Users\Roelof\Documents\C#\PasswordManager\passwordManager\passwordManager\bin\Debug\Database1.mdf" KeyPath="yes"/>
+      </Component>
+      <Component Id="Database1_log.ldf">
+        <File Id="Database1_log.ldf" Source="C:\Users\Roelof\Documents\C#\PasswordManager\passwordManager\passwordManager\bin\Debug\Database1_log.ldf" KeyPath="yes"/>
+      </Component>
+      <Component Id="libsodium.dll">
+        <File Id="libsodium.dll" Source="C:\Users\Roelof\Documents\C#\PasswordManager\passwordManager\passwordManager\bin\Debug\libsodium.dll" KeyPath="yes"/>
+      </Component>
+      <Component Id="libsodium_64.dll">
+        <File Id="libsodium_64.dll" Source="C:\Users\Roelof\Documents\C#\PasswordManager\passwordManager\passwordManager\bin\Debug\libsodium-64.dll" KeyPath="yes"/>
+      </Component>
+      <Component Id="MetroFramework.Design.dll">
+        <File Id="MetroFramework.Design.dll" Source="C:\Users\Roelof\Documents\C#\PasswordManager\passwordManager\passwordManager\bin\Debug\MetroFramework.Design.dll" KeyPath="yes"/>
+      </Component>
+      <Component Id="MetroFramework.dll">
+        <File Id="MetroFramework.dll" Source="C:\Users\Roelof\Documents\C#\PasswordManager\passwordManager\passwordManager\bin\Debug\MetroFramework.dll" KeyPath="yes"/>
+      </Component>
+      <Component Id="MetroFramework.Fonts.dll">
+        <File Id="MetroFramework.Fonts.dll" Source="C:\Users\Roelof\Documents\C#\PasswordManager\passwordManager\passwordManager\bin\Debug\MetroFramework.Fonts.dll" KeyPath="yes"/>
+      </Component>
+      <Component Id="Sodium.dll">
+        <File Id="Sodium.dll" Source="C:\Users\Roelof\Documents\C#\PasswordManager\passwordManager\passwordManager\bin\Debug\Sodium.dll" KeyPath="yes"/>
+      </Component>
+      <Component Id="sodium.dll.config">
+        <File Id="sodium.dll.config" Source="C:\Users\Roelof\Documents\C#\PasswordManager\passwordManager\passwordManager\bin\Debug\sodium.dll.config" KeyPath="yes"/>
+      </Component>
+      <Component Id="soteriasVault.exe.config">
+        <File Id="soteriasVault.exe.config" Source="C:\Users\Roelof\Documents\C#\PasswordManager\passwordManager\passwordManager\bin\Debug\soteriasVault.exe.config" KeyPath="yes"/>
+      </Component>
+      <Component Id="soteriasVault.pdb">
+        <File Id="soteriasVault.pdb" Source="C:\Users\Roelof\Documents\C#\PasswordManager\passwordManager\passwordManager\bin\Debug\soteriasVault.pdb" KeyPath="yes"/>
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

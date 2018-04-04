@@ -1,4 +1,4 @@
-﻿namespace passwordManager
+﻿namespace soteriasVault
 {
     partial class frmMain
     {
@@ -71,6 +71,7 @@
             this.txt_Password.WaterMark = "Password";
             this.txt_Password.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.txt_Password.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            this.txt_Password.Click += new System.EventHandler(this.txt_Password_Click);
             // 
             // btn_Submit
             // 
@@ -117,6 +118,7 @@
             this.txt_UserName.WaterMark = "Username";
             this.txt_UserName.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.txt_UserName.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            this.txt_UserName.Click += new System.EventHandler(this.txt_UserName_Click);
             // 
             // metroLabel3
             // 
@@ -127,6 +129,7 @@
             this.metroLabel3.TabIndex = 5;
             this.metroLabel3.Text = "Ver: ";
             this.metroLabel3.Theme = MetroFramework.MetroThemeStyle.Dark;
+            this.metroLabel3.Click += new System.EventHandler(this.metroLabel3_Click);
             // 
             // notifyIcon1
             // 
@@ -134,7 +137,7 @@
             this.notifyIcon1.BalloonTipText = "Your vault is hidden here";
             this.notifyIcon1.BalloonTipTitle = "Soteria\'s Vault";
             this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
-            this.notifyIcon1.Text = "SoteriaVault";
+            this.notifyIcon1.Text = " ";
             this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
             // 
             // pictureBox1
@@ -146,6 +149,7 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox1.TabIndex = 6;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // frmMain
             // 

@@ -1,4 +1,4 @@
-﻿namespace passwordManager
+﻿namespace soteriasVault
 {
     partial class Form1
     {

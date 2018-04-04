@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace passwordManager
+namespace soteriasVault
 {
     public partial class Form1 : MetroFramework.Forms.MetroForm
     {
