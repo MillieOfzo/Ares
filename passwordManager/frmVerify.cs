@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Data.SqlClient;
+using System.Data.SQLite;
 using Sodium;
 using MetroFramework;
 using System.Diagnostics;
@@ -17,10 +17,10 @@ namespace soteriasVault
 {
     public partial class frmVerify : MetroFramework.Forms.MetroForm
     {
-        public static string cs = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database1.mdf;Integrated Security=True;";
+        public string cs = @"Data Source=soterias_vault.db;Version=3;New=True;Compress=True;";
         public static string currentUser = frmMain.UserInformation.CurrentLoggedInUser;
-        public static int currentUserID = frmMain.UserInformation.CurrentLoggedInUserID;
-        public static int currentUserRole = frmMain.UserInformation.CurrentLoggedInUserRole;
+        public static long currentUserID = frmMain.UserInformation.CurrentLoggedInUserID;
+        public static long currentUserRole = frmMain.UserInformation.CurrentLoggedInUserRole;
         public static string AppVersion = frmMain.UserInformation.AppVersion;
 
         public frmVerify()
@@ -46,22 +46,21 @@ namespace soteriasVault
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(cs))
+                using (SQLiteConnection con = new SQLiteConnection(cs))
                 {
                     con.Open();
-                    using (SqlCommand cmd = new SqlCommand("Select * from tbl_login where Id=@user_id", con))
+                    using (SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM sot_users WHERE sot_user_id=@user_id", con))
                     {
                         cmd.Parameters.AddWithValue("@user_id", currentUserID);
-                        using (SqlDataReader readdata = cmd.ExecuteReader())
+                        using (SQLiteDataReader readdata = cmd.ExecuteReader())
                         {
                             string hash = null;
 
                             while (readdata.Read())
                             {
-                                hash = readdata["Password"].ToString();
+                                hash = readdata["sot_user_password"].ToString();
                             }
 
-                            con.Close();
                             if (PasswordHash.ScryptHashStringVerify(hash, password))
                             {
                                 return true;

@@ -55,9 +55,11 @@
             this.metroButton6 = new MetroFramework.Controls.MetroButton();
             this.metroListView2 = new MetroFramework.Controls.MetroListView();
             this.metroButton7 = new MetroFramework.Controls.MetroButton();
+            this.metroStyleManager1 = new MetroFramework.Components.MetroStyleManager(this.components);
             this.metroTabControl1.SuspendLayout();
             this.metroTabPage1.SuspendLayout();
             this.metroTabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager1)).BeginInit();
             this.SuspendLayout();
             // 
             // btn_LogOut
@@ -78,7 +80,7 @@
             this.metroTabControl1.Dock = System.Windows.Forms.DockStyle.Top;
             this.metroTabControl1.Location = new System.Drawing.Point(20, 60);
             this.metroTabControl1.Name = "metroTabControl1";
-            this.metroTabControl1.SelectedIndex = 0;
+            this.metroTabControl1.SelectedIndex = 1;
             this.metroTabControl1.Size = new System.Drawing.Size(600, 314);
             this.metroTabControl1.TabIndex = 3;
             this.metroTabControl1.Theme = MetroFramework.MetroThemeStyle.Dark;
@@ -448,6 +450,10 @@
             this.metroButton7.UseSelectable = true;
             this.metroButton7.Click += new System.EventHandler(this.metroButton7_Click);
             // 
+            // metroStyleManager1
+            // 
+            this.metroStyleManager1.Owner = null;
+            // 
             // frmHome
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -469,6 +475,7 @@
             this.metroTabPage1.PerformLayout();
             this.metroTabPage2.ResumeLayout(false);
             this.metroTabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -501,5 +508,6 @@
         private MetroFramework.Controls.MetroButton metroButton6;
         private MetroFramework.Controls.MetroListView metroListView2;
         private MetroFramework.Controls.MetroButton metroButton7;
+        private MetroFramework.Components.MetroStyleManager metroStyleManager1;
     }
 }

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Data.SqlClient;
+using System.Data.SQLite;
 using Sodium;
 using MetroFramework;
 using System.IO;
@@ -19,14 +19,14 @@ namespace soteriasVault
     public partial class frmHome : MetroFramework.Forms.MetroForm
     {
         //Connection String
-        public string cs = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database1.mdf;Integrated Security=True;";
+        public string cs = @"Data Source=soterias_vault.db;Version=3;New=True;Compress=True;";
         private DataGridView dataGridView1 = new DataGridView();
         private BindingSource bindingSource1 = new BindingSource();
-        private SqlDataAdapter dataAdapter = new SqlDataAdapter();
+        private SQLiteDataAdapter dataAdapter = new SQLiteDataAdapter();
 
         public static string currentUser = frmMain.UserInformation.CurrentLoggedInUser;
-        public static int currentUserRole = frmMain.UserInformation.CurrentLoggedInUserRole;
-        public static int currentUserID = frmMain.UserInformation.CurrentLoggedInUserID;
+        public static long currentUserRole = frmMain.UserInformation.CurrentLoggedInUserRole;
+        public static long currentUserID = frmMain.UserInformation.CurrentLoggedInUserID;
         public static string AppVersion = frmMain.UserInformation.AppVersion;
 
         private static string user_vault = currentUser+"_vault.dat";
@@ -34,12 +34,15 @@ namespace soteriasVault
         public frmHome()
         {
             InitializeComponent();
+
             metroLabel3.Text += currentUser;
             metroLabel6.Text += AppVersion;
+
             if (currentUserRole != 1)
             {
                 metroTabControl1.TabPages.Remove(metroTabPage1);
             }
+
             BindGridUsers();
             BindGridPasswords();
             checkVault();
@@ -61,10 +64,10 @@ namespace soteriasVault
             }
             try
             {
-                using (SqlConnection con = new SqlConnection(cs))
+                using (SQLiteConnection con = new SQLiteConnection(cs))
                 {
                     con.Open();
-                    using (SqlCommand cmd = new SqlCommand("INSERT INTO tbl_login (UserName,Password,is_admin) VALUES (@username,@password,@is_admin)", con))
+                    using (SQLiteCommand cmd = new SQLiteCommand("INSERT INTO sot_users (sot_user_name,sot_user_passowrd,sot_user_is_admin) VALUES (@username,@password,@is_admin)", con))
                     {
 
                         //this will produce a 512 byte hash
@@ -102,13 +105,13 @@ namespace soteriasVault
 
         private void BindGridUsers()
         {
-            using (SqlConnection con = new SqlConnection(cs))
+            using (SQLiteConnection con = new SQLiteConnection(cs))
             {
                 con.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT * FROM tbl_login", con))
+                using (SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM sot_users", con))
                 {
                     cmd.CommandType = CommandType.Text;
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    using (SQLiteDataReader reader = cmd.ExecuteReader())
                     {
 
                         // Clear the ListView control
@@ -124,9 +127,9 @@ namespace soteriasVault
                         while (reader.Read())
                         {
                             var item = new ListViewItem();
-                            item.Text = reader["Id"].ToString();
-                            item.SubItems.Add(reader["UserName"].ToString());
-                            item.SubItems.Add(reader["is_admin"].ToString());
+                            item.Text = reader["sot_user_id"].ToString();
+                            item.SubItems.Add(reader["sot_user_name"].ToString());
+                            item.SubItems.Add(reader["sot_user_is_admin"].ToString());
                             metroListView2.Items.Add(item);
                         }
                         //metroListView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
@@ -139,13 +142,13 @@ namespace soteriasVault
 
         private void RefreshGridUsers()
         {
-            using (SqlConnection con = new SqlConnection(cs))
+            using (SQLiteConnection con = new SQLiteConnection(cs))
             {
                 con.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT * FROM tbl_login", con))
+                using (SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM sot_users", con))
                 {
                     cmd.CommandType = CommandType.Text;
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    using (SQLiteDataReader reader = cmd.ExecuteReader())
                     {
 
                         // Clear the ListView control
@@ -158,9 +161,9 @@ namespace soteriasVault
                         while (reader.Read())
                         {
                             var item = new ListViewItem();
-                            item.Text = reader["Id"].ToString();
-                            item.SubItems.Add(reader["UserName"].ToString());
-                            item.SubItems.Add(reader["is_admin"].ToString());
+                            item.Text = reader["sot_user_id"].ToString();
+                            item.SubItems.Add(reader["sot_user_name"].ToString());
+                            item.SubItems.Add(reader["sot_user_is_admin"].ToString());
                             metroListView2.Items.Add(item);
                         }
                         //metroListView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
@@ -210,13 +213,13 @@ namespace soteriasVault
                 if (newForm.DialogResult == DialogResult.OK)
                 {
                     byte[] decryptData = null;
-                    using (SqlConnection con = new SqlConnection(cs))
+                    using (SQLiteConnection con = new SQLiteConnection(cs))
                     {
                         con.Open();
                         // Get user secretkey
                         decryptData = decryptDataKey(cs, currentUserID);
 
-                        using (SqlCommand cmd = new SqlCommand("INSERT INTO tbl_list (list_name,list_password,list_nonce,user_id) VALUES (@list_name,@list_password,@list_nonce,@user_id)", con))
+                        using (SQLiteCommand cmd = new SQLiteCommand("INSERT INTO sot_vault (sot_vault_name,sot_vault_password,sot_vault_nonce,sot_vault_user_id) VALUES (@list_name,@list_password,@list_nonce,@user_id)", con))
                         {
                             cmd.CommandType = CommandType.Text;
 
@@ -233,15 +236,11 @@ namespace soteriasVault
 
                                 int i = cmd.ExecuteNonQuery();
 
-                                con.Close();
-
                                 if (i != 0)
                                 {
                                     MetroMessageBox.Show(this, "Password Saved", "Success", MessageBoxButtons.OK, MessageBoxIcon.Question);
                                     RefreshGridPasswords();
                                 }
-
-                            con.Close();
                         }
 
                     }
@@ -255,14 +254,14 @@ namespace soteriasVault
 
         private void BindGridPasswords()
         {
-            using (SqlConnection con = new SqlConnection(cs))
+            using (SQLiteConnection con = new SQLiteConnection(cs))
             {
                 con.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT * FROM tbl_list WHERE user_id = @user_id", con))
+                using (SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM sot_vault WHERE sot_vault_user_id = @user_id", con))
                 {
                     cmd.Parameters.AddWithValue("@user_id", currentUserID);
                     cmd.CommandType = CommandType.Text;
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    using (SQLiteDataReader reader = cmd.ExecuteReader())
                     {
 
                         // Clear the ListView control
@@ -278,8 +277,8 @@ namespace soteriasVault
                         while (reader.Read())
                         {
                             var item = new ListViewItem();
-                            item.Text = reader["Id"].ToString();
-                            item.SubItems.Add(reader["list_name"].ToString());
+                            item.Text = reader["sot_vault_id"].ToString();
+                            item.SubItems.Add(reader["sot_vault_name"].ToString());
                             metroListView1.Items.Add(item);
                         }
                         //metroListView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
@@ -292,14 +291,14 @@ namespace soteriasVault
 
         private void RefreshGridPasswords()
         {
-            using (SqlConnection con = new SqlConnection(cs))
+            using (SQLiteConnection con = new SQLiteConnection(cs))
             {
                 con.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT * FROM tbl_list WHERE user_id = @user_id", con))
+                using (SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM sot_vault WHERE sot_vault_user_id = @user_id", con))
                 {
                     cmd.Parameters.AddWithValue("@user_id", currentUserID);
                     cmd.CommandType = CommandType.Text;
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    using (SQLiteDataReader reader = cmd.ExecuteReader())
                     {
 
                         // Clear the ListView control
@@ -312,8 +311,8 @@ namespace soteriasVault
                         while (reader.Read())
                         {
                             var item = new ListViewItem();
-                            item.Text = reader["Id"].ToString();
-                            item.SubItems.Add(reader["list_name"].ToString());
+                            item.Text = reader["sot_vault_id"].ToString();
+                            item.SubItems.Add(reader["sot_vault_name"].ToString());
                             metroListView1.Items.Add(item);
                         }
                         //metroListView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
@@ -328,22 +327,22 @@ namespace soteriasVault
         {
             //string show = metroListView1.Items[0].SubItems[0].Text;
             string row_id = metroListView1.SelectedItems[0].SubItems[0].Text;
-            using (SqlConnection con = new SqlConnection(cs))
+            using (SQLiteConnection con = new SQLiteConnection(cs))
             {
                 con.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT * FROM tbl_list WHERE Id = @row_id", con))
+                using (SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM sot_vault WHERE sot_vault_id = @row_id", con))
                 {
                     cmd.Parameters.AddWithValue("@row_id", row_id);
-                    using (SqlDataReader readdata = cmd.ExecuteReader())
+                    using (SQLiteDataReader readdata = cmd.ExecuteReader())
                     {
                         // Get user secretkey
                         byte[] secret_key = decryptDataKey(cs, currentUserID);
 
                         while (readdata.Read())
                         {
-                            string text_name = readdata["list_name"].ToString();
-                            byte[] text_password = (byte[])readdata["list_password"];
-                            byte[] text_nonce = (byte[])readdata["list_nonce"];
+                            string text_name = readdata["sot_vault_name"].ToString();
+                            byte[] text_password = (byte[])readdata["sot_vault_password"];
+                            byte[] text_nonce = (byte[])readdata["sot_vault_nonce"];
                             byte[] message2 = SecretBox.Open(text_password, text_nonce, secret_key);
 
                             string msg = Encoding.UTF8.GetString(message2);
@@ -404,10 +403,10 @@ namespace soteriasVault
 
             // Encrypt a copy of the data to the stream.
             int bytesWritten = EncryptDataToStream(toEncrypt, entropy, DataProtectionScope.CurrentUser, fStream);
-            using (SqlConnection con = new SqlConnection(cs))
+            using (SQLiteConnection con = new SQLiteConnection(cs))
             {
                 con.Open();
-                using (SqlCommand cmd = new SqlCommand("UPDATE tbl_login SET user_entropy = @user_entropy, user_bytes =@user_bytes WHERE Id=@user_id ", con))
+                using (SQLiteCommand cmd = new SQLiteCommand("UPDATE sot_users SET sot_user_entropy = @user_entropy, sot_user_bytes =@user_bytes WHERE sot_user_id=@user_id ", con))
                 {
                     cmd.Parameters.AddWithValue("@user_entropy", entropy);
                     cmd.Parameters.AddWithValue("@user_bytes", bytesWritten);
@@ -425,44 +424,42 @@ namespace soteriasVault
             }
         }
 
-        public static byte[] decryptDataKey(string sql_conn, int user_id)
+        public static byte[] decryptDataKey(string sql_conn, long user_id)
         {
-            using (SqlConnection con = new SqlConnection(sql_conn))
-            {
-                con.Open();
-                using (SqlCommand cmd = new SqlCommand("Select * from tbl_login where Id=@user_id", con))
+                using (SQLiteConnection con = new SQLiteConnection(sql_conn))
                 {
-                    cmd.Parameters.AddWithValue("@user_id", user_id);
-                    cmd.CommandType = CommandType.Text;
-                    using (SqlDataReader readdata = cmd.ExecuteReader())
+                    con.Open();
+                    using (SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM sot_users WHERE sot_user_id=@user_id", con))
                     {
-                        //string password = newForm.metroTextBox1.Text;
-                        Console.WriteLine("Reading data from disk and decrypting...");
-                        // Open the file.
-                        File.Decrypt(user_vault);
-                        using (FileStream fStream = new FileStream(user_vault, FileMode.Open))
+                        cmd.Parameters.AddWithValue("@user_id", user_id);
+                        cmd.CommandType = CommandType.Text;
+                        using (SQLiteDataReader readdata = cmd.ExecuteReader())
                         {
-
-                            byte[] user_entropy = null;
-                            int user_bytes = 0;
-
-                            while (readdata.Read())
+                            //string password = newForm.metroTextBox1.Text;
+                            Console.WriteLine("Reading data from disk and decrypting...");
+                            // Open the file.
+                            File.Decrypt(user_vault);
+                            using (FileStream fStream = new FileStream(user_vault, FileMode.Open))
                             {
-                                user_entropy = (byte[])readdata["user_entropy"];
-                                user_bytes = Convert.ToInt32(readdata["user_bytes"]);
+
+                                byte[] user_entropy = null;
+                                int user_bytes = 0;
+
+                                while (readdata.Read())
+                                {
+                                    user_entropy = (byte[])(readdata["sot_user_entropy"]);
+                                    user_bytes = Convert.ToInt32(readdata["sot_user_bytes"]);
+                                }
+
+                                // Read from the stream and decrypt the secret key.
+                                byte[] decryptData = DecryptDataFromStream(user_entropy, DataProtectionScope.CurrentUser, fStream, user_bytes);
+
+                                //Console.WriteLine("Decrypted data: " + Encoding.UTF8.GetString(decryptData));
+                                return decryptData;
                             }
-
-                            // Read from the stream and decrypt the secret key.
-                            byte[] decryptData = DecryptDataFromStream(user_entropy, DataProtectionScope.CurrentUser, fStream, user_bytes);
-
-                            fStream.Close();
-                            //Console.WriteLine("Decrypted data: " + Encoding.UTF8.GetString(decryptData));
-                            con.Close();
-                            return decryptData;
                         }
-                    }                                 
+                    }
                 }
-            }
         }
 
         public static byte[] CreateRandomEntropy()
@@ -554,10 +551,10 @@ namespace soteriasVault
                     {
                         try
                         {
-                            using (SqlConnection con = new SqlConnection(cs))
+                            using (SQLiteConnection con = new SQLiteConnection(cs))
                             {
                                 con.Open();
-                                using (SqlCommand cmd = new SqlCommand("DELETE FROM tbl_list WHERE user_id =@user_id", con))
+                                using (SQLiteCommand cmd = new SQLiteCommand("DELETE FROM sot_vault WHERE sot_vault_user_id =@user_id", con))
                                 {
                                     cmd.Parameters.AddWithValue("@user_id", currentUserID);
 
@@ -598,10 +595,10 @@ namespace soteriasVault
             if (metroListView1.SelectedItems.Count > 0)
             {
                 string row_id = metroListView1.SelectedItems[0].SubItems[0].Text;
-                using (SqlConnection con = new SqlConnection(cs))
+                using (SQLiteConnection con = new SQLiteConnection(cs))
                 {
                     con.Open();
-                    using (SqlCommand cmd = new SqlCommand("DELETE FROM tbl_list WHERE Id=@row_id ", con))
+                    using (SQLiteCommand cmd = new SQLiteCommand("DELETE FROM sot_vault WHERE sot_vault_id=@row_id ", con))
                     {
                         frmVerify newForm = new frmVerify();
                         newForm.ShowDialog();
@@ -630,10 +627,10 @@ namespace soteriasVault
             if (metroListView2.SelectedItems.Count > 0 )
             {
                 string row_id = metroListView2.SelectedItems[0].SubItems[0].Text;
-                using (SqlConnection con = new SqlConnection(cs))
+                using (SQLiteConnection con = new SQLiteConnection(cs))
                 {
                     con.Open();
-                    using (SqlCommand cmd = new SqlCommand("DELETE FROM tbl_login WHERE Id=@row_id ", con))
+                    using (SQLiteCommand cmd = new SQLiteCommand("DELETE FROM sot_users WHERE sot_user_id=@row_id ", con))
                     {
                         frmVerify newForm = new frmVerify();
                         newForm.ShowDialog();
@@ -660,6 +657,7 @@ namespace soteriasVault
         {
             Application.Exit();
         }
+
     }
 }
  

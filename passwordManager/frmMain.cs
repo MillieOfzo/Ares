@@ -8,18 +8,18 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Data.SqlClient;
 using Sodium;
 using MetroFramework;
 using System.Diagnostics;
+using System.Data.SQLite;
 
 namespace soteriasVault
 {
     public partial class frmMain : MetroFramework.Forms.MetroForm   
     {
         //Connection String
-        public string cs = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database1.mdf;Integrated Security=True;";
-
+        //public string cs = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database1.mdf;Integrated Security=True;";
+        public string cs = @"Data Source=soterias_vault.db;Version=3;New=True;Compress=True;";
         public frmMain()
         {
 
@@ -36,7 +36,7 @@ namespace soteriasVault
 
         internal class UserInformation
         {
-            public static int CurrentLoggedInUserID
+            public static long CurrentLoggedInUserID
             {
                 get;
                 set;
@@ -46,7 +46,7 @@ namespace soteriasVault
                 get;
                 set;
             }
-            public static int CurrentLoggedInUserRole
+            public static long CurrentLoggedInUserRole
             {
                 get;
                 set;
@@ -68,10 +68,10 @@ namespace soteriasVault
 
             try
             {
-                using (SqlConnection con = new SqlConnection(cs))
+                using (SQLiteConnection con = new SQLiteConnection(cs))
                 {
                     con.Open();
-                    using (SqlCommand cmd = new SqlCommand("SELECT * FROM tbl_login WHERE UserName=@username", con))
+                    using (SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM sot_users WHERE sot_user_name=@username", con))
                     {
                         //int rowCount = (int)cmd.ExecuteScalar();
                         //if (rowCount == 0)
@@ -81,25 +81,25 @@ namespace soteriasVault
                         //}
 
                         cmd.Parameters.AddWithValue("@username", txt_UserName.Text.ToLower());
-                        int is_admin = 0;
+                        long is_admin =0;
+                        long user_id = 0;
                         string username = null;
-                        int username_id = 0;
                         string hash = null;
 
-                        using (SqlDataReader readdata = cmd.ExecuteReader())
+                        using (SQLiteDataReader readdata = cmd.ExecuteReader())
                         {
                             while (readdata.Read())
                             {
-                                is_admin = (int)readdata["is_admin"];
-                                username = readdata["UserName"].ToString();
-                                username_id = (int)readdata["Id"];
-                                hash = readdata["Password"].ToString();
+                                is_admin = (long)readdata["sot_user_is_admin"];
+                                user_id = (long)readdata["sot_user_id"];
+                                username = readdata["sot_user_name"].ToString();
+                                hash = readdata["sot_user_password"].ToString();
                             }
                         }
 
                         if (PasswordHash.ScryptHashStringVerify(hash, txt_Password.Text))
                         {
-                            UserInformation.CurrentLoggedInUserID = username_id;
+                            UserInformation.CurrentLoggedInUserID = user_id;
                             UserInformation.CurrentLoggedInUser = username;
                             UserInformation.CurrentLoggedInUserRole = is_admin;
                             //MessageBox.Show("Login Successful!");
@@ -114,10 +114,10 @@ namespace soteriasVault
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
-                Console.WriteLine("Something went wrong!");
+                MessageBox.Show(ex.Message);
+                Console.WriteLine("Something went wrong during login!");
             }
         }
 
@@ -140,15 +140,15 @@ namespace soteriasVault
 
         private void checkUsers()
         {
-            using (SqlConnection con = new SqlConnection(cs))
+            using (SQLiteConnection con = new SQLiteConnection(cs))
             {
                 con.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM tbl_login", con))
+                using (SQLiteCommand cmd = new SQLiteCommand("SELECT 1 FROM sot_users", con))
                 {
                     // Check if there are users in database
-                    int rowCount = (int)cmd.ExecuteScalar();
+                    object rowCount = cmd.ExecuteScalar();
                     // If there are no users show create user form
-                    if (rowCount == 0)
+                    if (rowCount == null)
                     {
                         frmCreate createAdmin = new frmCreate();
                         createAdmin.ShowDialog();

@@ -29,34 +29,14 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCreate));
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.metroLabel3 = new MetroFramework.Controls.MetroLabel();
             this.btn_Submit = new MetroFramework.Controls.MetroButton();
             this.txt_new_Password = new MetroFramework.Controls.MetroTextBox();
             this.txt_new_UserName = new MetroFramework.Controls.MetroTextBox();
             this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.metroLabel3 = new MetroFramework.Controls.MetroLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(59, 11);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(150, 150);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox1.TabIndex = 11;
-            this.pictureBox1.TabStop = false;
-            // 
-            // metroLabel3
-            // 
-            this.metroLabel3.AutoSize = true;
-            this.metroLabel3.Location = new System.Drawing.Point(7, 299);
-            this.metroLabel3.Name = "metroLabel3";
-            this.metroLabel3.Size = new System.Drawing.Size(36, 19);
-            this.metroLabel3.TabIndex = 10;
-            this.metroLabel3.Text = "Ver: ";
-            this.metroLabel3.Theme = MetroFramework.MetroThemeStyle.Dark;
             // 
             // btn_Submit
             // 
@@ -86,10 +66,10 @@
             this.txt_new_Password.CustomButton.Visible = false;
             this.txt_new_Password.Lines = new string[0];
             this.txt_new_Password.Location = new System.Drawing.Point(23, 236);
-            this.txt_new_Password.MaxLength = 32767;
+            this.txt_new_Password.MaxLength = 50;
             this.txt_new_Password.Name = "txt_new_Password";
             this.txt_new_Password.PasswordChar = '*';
-            this.txt_new_Password.PromptText = "Password";
+            this.txt_new_Password.PromptText = "";
             this.txt_new_Password.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.txt_new_Password.SelectedText = "";
             this.txt_new_Password.SelectionLength = 0;
@@ -120,7 +100,7 @@
             this.txt_new_UserName.CustomButton.Visible = false;
             this.txt_new_UserName.Lines = new string[0];
             this.txt_new_UserName.Location = new System.Drawing.Point(23, 207);
-            this.txt_new_UserName.MaxLength = 32767;
+            this.txt_new_UserName.MaxLength = 50;
             this.txt_new_UserName.Name = "txt_new_UserName";
             this.txt_new_UserName.PasswordChar = '\0';
             this.txt_new_UserName.PromptText = "Username";
@@ -147,15 +127,36 @@
             this.metroLabel1.Text = "No users present, create your admin";
             this.metroLabel1.Theme = MetroFramework.MetroThemeStyle.Dark;
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(59, 11);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(150, 150);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox1.TabIndex = 11;
+            this.pictureBox1.TabStop = false;
+            // 
+            // metroLabel3
+            // 
+            this.metroLabel3.FontSize = MetroFramework.MetroLabelSize.Small;
+            this.metroLabel3.Location = new System.Drawing.Point(6, 299);
+            this.metroLabel3.Name = "metroLabel3";
+            this.metroLabel3.Size = new System.Drawing.Size(120, 19);
+            this.metroLabel3.TabIndex = 13;
+            this.metroLabel3.Text = "Ver: ";
+            this.metroLabel3.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.metroLabel3.Theme = MetroFramework.MetroThemeStyle.Dark;
+            // 
             // frmCreate
             // 
             this.AcceptButton = this.btn_Submit;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(269, 325);
+            this.Controls.Add(this.metroLabel3);
             this.Controls.Add(this.metroLabel1);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.metroLabel3);
             this.Controls.Add(this.btn_Submit);
             this.Controls.Add(this.txt_new_Password);
             this.Controls.Add(this.txt_new_UserName);
@@ -174,10 +175,10 @@
         #endregion
 
         private System.Windows.Forms.PictureBox pictureBox1;
-        private MetroFramework.Controls.MetroLabel metroLabel3;
         private MetroFramework.Controls.MetroButton btn_Submit;
         private MetroFramework.Controls.MetroTextBox txt_new_Password;
         private MetroFramework.Controls.MetroTextBox txt_new_UserName;
         private MetroFramework.Controls.MetroLabel metroLabel1;
+        private MetroFramework.Controls.MetroLabel metroLabel3;
     }
 }

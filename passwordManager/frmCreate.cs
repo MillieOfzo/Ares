@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Data.SqlClient;
+using System.Data.SQLite;
 using Sodium;
 using MetroFramework;
 using System.Diagnostics;
@@ -17,10 +17,10 @@ namespace soteriasVault
 {
     public partial class frmCreate : MetroFramework.Forms.MetroForm   
     {
-        public string cs = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Roelof\Documents\C#\PasswordManager\passwordManager\passwordManager\Database1.mdf;Integrated Security=True;";
+        public string cs = @"Data Source=soterias_vault.db;Version=3;New=True;Compress=True;";
         public static string currentUser = frmMain.UserInformation.CurrentLoggedInUser;
-        public static int currentUserRole = frmMain.UserInformation.CurrentLoggedInUserRole;
-        public static int currentUserID = frmMain.UserInformation.CurrentLoggedInUserID;
+        public static long currentUserRole = frmMain.UserInformation.CurrentLoggedInUserRole;
+        public static long currentUserID = frmMain.UserInformation.CurrentLoggedInUserID;
         public static string AppVersion = frmMain.UserInformation.AppVersion;
 
         public frmCreate()
@@ -40,10 +40,10 @@ namespace soteriasVault
             }
             try
             {
-                using (SqlConnection con = new SqlConnection(cs))
+                using (SQLiteConnection con = new SQLiteConnection(cs))
                 {
                     con.Open();
-                    using (SqlCommand cmd = new SqlCommand("INSERT INTO tbl_login (UserName,Password,is_admin) VALUES (@username,@password,@is_admin)", con))
+                    using (SQLiteCommand cmd = new SQLiteCommand("INSERT INTO sot_users (sot_user_name,sot_user_password,sot_user_is_admin) VALUES (@username,@password,@is_admin)", con))
                     {
 
                         //this will produce a 512 byte hash
@@ -51,15 +51,21 @@ namespace soteriasVault
 
                         cmd.Parameters.AddWithValue("@username", txt_new_UserName.Text.ToLower());
                         cmd.Parameters.AddWithValue("@password", hash);
-                        cmd.Parameters.AddWithValue("@is_admin", 1);
+                        // By default create admin user with no admin rights
+                        cmd.Parameters.AddWithValue("@is_admin", 0);
             
                         int i = cmd.ExecuteNonQuery();
 
                         if (i != 0)
                         {
-                            MetroMessageBox.Show(this, "User created", "Success", MessageBoxButtons.OK, MessageBoxIcon.Question);
-                            this.DialogResult = DialogResult.OK;
-                            //Application.Restart();
+                            if (MetroMessageBox.Show(this, "User created", "Success", MessageBoxButtons.OK, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.OK)
+                            {
+                                //this.DialogResult = DialogResult.OK;
+                                this.Hide();
+                                frmMain main = new frmMain();
+                                main.Show();
+                                //Application.Restart();
+                            }
                         }
                     }
                 }

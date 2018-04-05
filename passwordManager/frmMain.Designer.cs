@@ -160,8 +160,8 @@
         private MetroFramework.Controls.MetroTextBox txt_Password;
         private MetroFramework.Controls.MetroButton btn_Submit;
         private MetroFramework.Controls.MetroTextBox txt_UserName;
-        private MetroFramework.Controls.MetroLabel metroLabel3;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private MetroFramework.Controls.MetroLabel metroLabel3;
     }
 }
